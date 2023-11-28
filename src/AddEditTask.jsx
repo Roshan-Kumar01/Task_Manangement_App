@@ -3,11 +3,13 @@ import CustomTextField from "./commonComponents/CustomTextField";
 import { Alert, AlertTitle, Autocomplete, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { toast, ToastContainer } from 'react-toastify';
 import AlertDialog from "./commonComponents/AlertDialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getFromLocalStorage, removeFromLocalStorage } from "./utils/utils";
 
 const AddEditTask = (props) => {
     const defaultValues = {
-        taskName: ''
+        taskName: '',
+        priority: {}
     }
 
     const {
@@ -20,6 +22,7 @@ const AddEditTask = (props) => {
         handleSubmit,
         formState: { errors },
         trigger,
+        reset,
     } = useForm({ defaultValues })
 
     const [openDialog, setOpenDialog] = useState({
@@ -45,7 +48,7 @@ const AddEditTask = (props) => {
         const storedArrayOfObjects = JSON.parse(storedArrayString);
 
         // setting new data
-        const newArr = [val, ...(storedArrayOfObjects?.length > 0 ? storedArrayOfObjects : [])]
+        const newArr = [{id: Math.ceil(Math.random()*100000), ...val}, ...(storedArrayOfObjects?.length > 0 ? storedArrayOfObjects : [])]
         const arrayOfObjectsString = JSON.stringify(newArr);
 
         // Store the stringified array in localStorage under a specific key
@@ -62,6 +65,18 @@ const AddEditTask = (props) => {
     const handlePriorityChange = (e, item, reason, details) => {
         setValue('priority', item)
     }
+
+    useEffect(() => {
+        const editItem = getFromLocalStorage('editItem');
+        removeFromLocalStorage('editItem')
+
+        setTimeout(() => {
+            if(editItem?.length > 0)
+                reset({
+                    ...editItem[0]
+                })
+        }, 100)
+    }, [])
 
     return(
         <>
@@ -106,6 +121,7 @@ const AddEditTask = (props) => {
                         // sx={{ width: 300 }}
                         onChange={handlePriorityChange}
                         renderInput={(params) => <TextField {...params} label="Priority" />}
+                        value={getValues()?.priority}
                     />
                 </Grid>
                 <Grid item xs={8} sm={8} md={8} lg={8} xl={8} margin='10px'>
