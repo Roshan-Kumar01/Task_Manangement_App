@@ -1,8 +1,21 @@
+import { Button, Grid, Typography } from "@mui/material";
+import TaskListTable from "./Table";
+import { useNavigate } from "react-router-dom";
 
 const TaskList = (props) => {
-
+    const navigate = useNavigate()
+    
     return(
-        <div style={{color: 'red'}}>hello from add/edit</div>
+        <>
+            <Grid container justifyContent='flex-end' marginBottom='20px'>
+                <Button 
+                    variant="contained"
+                    onClick={() => navigate('/add')}
+                
+                >Add Task</Button>
+            </Grid>
+            <TaskListTable />
+        </>
     )
 }
 
