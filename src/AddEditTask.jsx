@@ -29,6 +29,7 @@ const AddEditTask = (props) => {
         open: false,
         content: '',
     });
+    const [isEdit, setIsEdit] = useState(false);
 
     const priorityOptions = [
         { label: 'Low', value: 'low' },
@@ -70,12 +71,12 @@ const AddEditTask = (props) => {
         const editItem = getFromLocalStorage('editItem');
         removeFromLocalStorage('editItem')
 
-        setTimeout(() => {
-            if(editItem?.length > 0)
-                reset({
-                    ...editItem[0]
-                })
-        }, 100)
+        if(editItem?.length > 0){
+            setIsEdit(true)
+            reset({
+                ...editItem[0]
+            })
+        }
     }, [])
 
     return(
@@ -121,7 +122,7 @@ const AddEditTask = (props) => {
                         // sx={{ width: 300 }}
                         onChange={handlePriorityChange}
                         renderInput={(params) => <TextField {...params} label="Priority" />}
-                        value={getValues()?.priority}
+                        value={isEdit ? getValues()?.priority : ''}
                     />
                 </Grid>
                 <Grid item xs={8} sm={8} md={8} lg={8} xl={8} margin='10px'>

@@ -82,7 +82,22 @@ export default function TaskListTable() {
   ];
 
   useEffect(() => {
-    setRows(storedArrayOfObjects);
+    if(storedArrayOfObjects?.length > 0) {
+      setRows(storedArrayOfObjects);
+    }
+    else {
+      setRows([
+        {
+          id: 1,
+          priority: {
+            label: 'Medium',
+            value: 'medium',
+          },
+          taskDescription: 'Default task',
+          taskName: 'Default task',
+        }
+      ])
+    }
 
   }, [storedArrayOfObjects?.length])
 
